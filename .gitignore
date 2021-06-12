@@ -1,0 +1,6 @@
+build/**
+external/limine/**
+iso_root/**
+src/*.o
+image.iso
+arch.drawio
