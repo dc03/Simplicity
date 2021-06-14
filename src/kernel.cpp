@@ -4,7 +4,7 @@
 
 static uint8_t stack[4096];
 
-static struct stivale2_header_tag_terminal terminal_hdr_tag = {
+static stivale2_header_tag_terminal terminal_hdr_tag = {
     .tag = {
         .identifier = STIVALE2_HEADER_TAG_TERMINAL_ID,
         .next = 0
@@ -12,7 +12,7 @@ static struct stivale2_header_tag_terminal terminal_hdr_tag = {
     .flags = 0
 };
 
-static struct stivale2_header_tag_framebuffer framebuffer_hdr_tag = {
+static stivale2_header_tag_framebuffer framebuffer_hdr_tag = {
     .tag = {
         .identifier = STIVALE2_HEADER_TAG_FRAMEBUFFER_ID,
         .next = (uint64_t)&terminal_hdr_tag
@@ -32,7 +32,7 @@ static struct stivale2_header stivale_hdr = {
 };
 
 void *stivale2_get_tag(struct stivale2_struct *stivale2_struct, uint64_t id) {
-    struct stivale2_tag *current_tag = (void*)stivale2_struct->tags;
+    stivale2_tag *current_tag = reinterpret_cast<stivale2_tag*>(stivale2_struct->tags);
 
     for (;;) {
         if (current_tag == NULL) {
@@ -43,13 +43,13 @@ void *stivale2_get_tag(struct stivale2_struct *stivale2_struct, uint64_t id) {
             return current_tag;
         }
 
-        current_tag = (void*)current_tag->next;
+        current_tag = reinterpret_cast<stivale2_tag*>(current_tag->next);
     }
 }
 
-void _start(struct stivale2_struct *stivale2_struct) {
+extern "C" void _start(struct stivale2_struct *stivale2_struct) {
     struct stivale2_struct_tag_terminal *term_str_tag;
-    term_str_tag = stivale2_get_tag(stivale2_struct, STIVALE2_STRUCT_TAG_TERMINAL_ID);
+    term_str_tag = reinterpret_cast<stivale2_struct_tag_terminal*>(stivale2_get_tag(stivale2_struct, STIVALE2_STRUCT_TAG_TERMINAL_ID));
 
     if (term_str_tag == NULL) {
         for (;;) {
@@ -59,7 +59,8 @@ void _start(struct stivale2_struct *stivale2_struct) {
 
     void *term_write_ptr = (void*)term_str_tag->term_write;
 
-    void (*term_write)(const char *string, size_t length)  = term_write_ptr;
+    using term_write_t = void(*)(const char *string, size_t length);
+    term_write_t term_write  = reinterpret_cast<term_write_t>(term_write_ptr);
 
     term_write("Hello world", 11);
 
