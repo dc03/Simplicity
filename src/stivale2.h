@@ -102,13 +102,13 @@ struct stivale2_struct_tag_framebuffer {
     uint16_t framebuffer_height;
     uint16_t framebuffer_pitch;
     uint16_t framebuffer_bpp;
-    uint8_t  memory_model;
-    uint8_t  red_mask_size;
-    uint8_t  red_mask_shift;
-    uint8_t  green_mask_size;
-    uint8_t  green_mask_shift;
-    uint8_t  blue_mask_size;
-    uint8_t  blue_mask_shift;
+    uint8_t memory_model;
+    uint8_t red_mask_size;
+    uint8_t red_mask_shift;
+    uint8_t green_mask_size;
+    uint8_t green_mask_shift;
+    uint8_t blue_mask_size;
+    uint8_t blue_mask_shift;
 } __attribute__((__packed__));
 
 #define STIVALE2_STRUCT_TAG_EDID_ID 0x968609d7af96b845
@@ -116,7 +116,7 @@ struct stivale2_struct_tag_framebuffer {
 struct stivale2_struct_tag_edid {
     struct stivale2_tag tag;
     uint64_t edid_size;
-    uint8_t  edid_information[];
+    uint8_t edid_information[];
 } __attribute__((__packed__));
 
 #define STIVALE2_STRUCT_TAG_FB_MTRR_ID 0x6bc1a78ebe871172
