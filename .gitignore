@@ -1,5 +1,7 @@
 build/**
+cmake-build-debug/**
 external/limine/**
+.idea/**
 iso_root/**
 src/*.o
 image.iso
