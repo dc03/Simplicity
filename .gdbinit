@@ -1,2 +1,2 @@
 add-symbol-file ./build/simplicity.elf
-target remote | qemu -S -gdb -no-reboot -no-shutdown tcp::1234
+target remote tcp::1234

@@ -3,6 +3,7 @@ cmake-build-debug/**
 external/limine/**
 .idea/**
 iso_root/**
+!iso_root/.gitkeep
 src/*.o
 image.iso
 arch.drawio
