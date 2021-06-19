@@ -20,13 +20,15 @@
 <img src="https://github.com/akshatvg/common-entry-test/raw/master/static/img/header.png" alt="Project Screenshots"> -->
 
 ## Instructions to run
-First, clone and install limine in the `external/` directory
+First, clone limine in the `external/` directory (if not already present)
 ```
 $ cd external/
 $ git clone https://github.com/limine-bootloader/limine
-$ cd limine
-$ make
-$ cd ../..
+$ cd ..
+```
+Then, build limine
+```
+$ make -C external/limine
 ```
 Next, if not using CLion, create the `cmake-build-debug` directory to store the built kernel
 ```
