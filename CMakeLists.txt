@@ -15,7 +15,7 @@ set(INTERNALLDFLAGS -fno-pic -fpie -Wl,-static,-pie,--no-dynamic-linker,-ztext
                     -static-pie -nostdlib -T${LINKER_SCRIPT}
                     -z max-page-size=0x1000)
 
-add_executable(simplicity.elf src/Kernel.cpp src/GDT.cpp)
+add_executable(simplicity.elf src/Init.cpp src/Kernel.cpp src/IDT/IDT.cpp src/IDT/IDT.S src/GDT/GDT.S)
 target_compile_options(simplicity.elf PUBLIC ${CXXFLAGS} ${INTERNALCXXFLAGS})
 target_link_options(simplicity.elf PUBLIC ${INTERNALLDFLAGS})
 

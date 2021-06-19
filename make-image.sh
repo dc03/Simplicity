@@ -1,5 +1,5 @@
 # Copy the relevant files over.
-cp -v build/simplicity.elf limine.cfg external/limine/limine.sys \
+cp -v cmake-build-debug/simplicity.elf limine.cfg external/limine/limine.sys \
       external/limine/limine-cd.bin external/limine/limine-eltorito-efi.bin iso_root/
  
 # Create the bootable ISO.
