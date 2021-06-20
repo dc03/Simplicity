@@ -1,2 +1,2 @@
-add-symbol-file ./build/simplicity.elf
+add-symbol-file ./cmake-build-debug/simplicity.elf
 target remote tcp::1234
