@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-Kernel::Kernel(stivale2_struct *stivale2_struct): stivale2_header{stivale2_struct} {
+Kernel::Kernel(stivale2_struct *stivale2_struct) : stivale2_header{stivale2_struct} {
     GDT.setup_stivale2();
     IDT.setup_IDT();
 }

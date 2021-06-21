@@ -1,6 +1,7 @@
+#include "Constants.hpp"
 #include "Kernel.hpp"
 
-static uint8_t stack[4096];
+static uint8_t stack[KERNEL_STACK_SIZE];
 
 // clang-format off
 static stivale2_header_tag_terminal terminal_hdr_tag = {

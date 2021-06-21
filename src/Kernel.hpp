@@ -3,6 +3,7 @@
 #ifndef KERNEL_HPP
 #define KERNEL_HPP
 
+#include "Constants.hpp"
 #include "GDT/GDT.hpp"
 #include "IDT/IDT.hpp"
 #include "stivale2.h"
@@ -20,12 +21,12 @@
  * - 64-bit data
  */
 class Kernel {
-    GlobalDescriptorTable<7> GDT{};
+    GlobalDescriptorTable<GDT_SIZE> GDT{};
     InterruptDescriptorTable IDT{};
     stivale2_struct *stivale2_header{};
 
   public:
-    using Stivale2TermWriteType = void(*)(const char *string, std::size_t length);
+    using Stivale2TermWriteType = void (*)(const char *string, std::size_t length);
 
     /**
      * @brief Kernel class constructor

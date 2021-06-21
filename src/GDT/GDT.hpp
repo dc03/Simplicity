@@ -63,7 +63,8 @@ class GlobalDescriptorTable {
      * @param granularity The four upper limit bits and the four flag bits
      */
     template <std::size_t num>
-    constexpr void set_descriptor(std::uint64_t base, std::uint64_t limit, std::uint8_t access, std::uint8_t granularity);
+    constexpr void set_descriptor(
+        std::uint64_t base, std::uint64_t limit, std::uint8_t access, std::uint8_t granularity);
 
     /**
      * @brief Sets up the GDT
@@ -95,7 +96,7 @@ constexpr void GlobalDescriptorTable<N>::set_descriptor(
     table[num].limit_low = (limit & 0xFFFF);
     table[num].granularity = ((limit >> 16) & 0x0F);
 
-    table[num].granularity |= (granularity & 0xF0);
+    table[num].granularity |= (granularity << 4) & 0xF0;
     table[num].access = access;
 }
 
@@ -104,13 +105,21 @@ void GlobalDescriptorTable<N>::setup_stivale2() {
     pointer.limit = sizeof(table) - 1;
     pointer.base = reinterpret_cast<std::uintptr_t>(&table);
 
-    set_descriptor<0>(0, 0, 0, 0);                              // null descriptor
-    set_descriptor<1>(0, 0x000000FFFF, 0b10011010, 0b00000000); // 16-bit code
-    set_descriptor<2>(0, 0x000000FFFF, 0b10010010, 0b00000000); // 16-bit data
-    set_descriptor<3>(0, 0x00FFFFFFFF, 0b10011010, 0b11000000); // 32-bit code
-    set_descriptor<4>(0, 0x00FFFFFFFF, 0b10010010, 0b11000000); // 32-bit data
-    set_descriptor<5>(0, 0xFFFFFFFFFF, 0b10011010, 0b10100000); // 64-bit code
-    set_descriptor<6>(0, 0xFFFFFFFFFF, 0b10010010, 0b10100000); // 64-bit data
+    constexpr std::size_t code_segment =
+        GDT_PRESENT | GDT_PRIVILEGE_DPL0 | GDT_CODE_SEGMENT | GDT_EXECUTABLE_SEGMENT | GDT_READ_WRITE_SEGMENT;
+    constexpr std::size_t data_segment = GDT_PRESENT | GDT_PRIVILEGE_DPL0 | GDT_DATA_SEGMENT | GDT_READ_WRITE_SEGMENT;
+
+    constexpr std::size_t bits_16 = GDT_1B_GRANULARITY | GDT_16_BIT_SEGMENT;
+    constexpr std::size_t bits_32 = GDT_4K_GRANULARITY | GDT_32_BIT_SEGMENT;
+    constexpr std::size_t bits_64 = GDT_4K_GRANULARITY | GDT_64_BIT_SEGMENT;
+
+    set_descriptor<0>(0, 0, 0, 0);                             // null descriptor
+    set_descriptor<1>(0, 0x000000FFFF, code_segment, bits_16); // 16-bit code
+    set_descriptor<2>(0, 0x000000FFFF, data_segment, bits_16); // 16-bit data
+    set_descriptor<3>(0, 0x00FFFFFFFF, code_segment, bits_32); // 32-bit code
+    set_descriptor<4>(0, 0x00FFFFFFFF, data_segment, bits_32); // 32-bit data
+    set_descriptor<5>(0, 0xFFFFFFFFFF, code_segment, bits_64); // 64-bit code
+    set_descriptor<6>(0, 0xFFFFFFFFFF, data_segment, bits_64); // 64-bit data
 
     set_GDTR(reinterpret_cast<void *>(&pointer));
 }

@@ -25,16 +25,16 @@ ISR_stub_\n:
     iretq
 .endm
 
-ISR_no_error_stub 00
-ISR_no_error_stub 01
-ISR_no_error_stub 02
-ISR_no_error_stub 03
-ISR_no_error_stub 04
-ISR_no_error_stub 05
-ISR_no_error_stub 06
-ISR_no_error_stub 07
-ISR_error_stub    08
-ISR_no_error_stub 09
+ISR_no_error_stub 0
+ISR_no_error_stub 1
+ISR_no_error_stub 2
+ISR_no_error_stub 3
+ISR_no_error_stub 4
+ISR_no_error_stub 5
+ISR_no_error_stub 6
+ISR_no_error_stub 7
+ISR_error_stub    8
+ISR_no_error_stub 9
 ISR_error_stub    10
 ISR_error_stub    11
 ISR_error_stub    12
@@ -61,7 +61,10 @@ ISR_no_error_stub 31
     .data
     .global ISR_stub_table
 ISR_stub_table:
-    .irpc a, 012
+    .irpc a, 012345789
+        .quad ISR_stub_\a
+    .endr
+    .irpc a, 12
     .irpc b, 0123456789
         .quad ISR_stub_\a\b
     .endr

@@ -3,8 +3,22 @@
 #ifndef IDT_HPP
 #define IDT_HPP
 
+#include "../Constants.hpp"
+
 #include <cstddef>
 #include <cstdint>
+
+enum GateType {
+    INTERRUPT_16 [[maybe_unused]] = 0b0110,
+    INTERRUPT_32 = 0b1110,
+    TRAP_16 [[maybe_unused]] = 0b0111,
+    TRAP_32 = 0b1111,
+};
+
+enum AttributeType {
+    INTERRUPT_32_DPL0 = 0b1000 << 4 | GateType::INTERRUPT_32,
+    TRAP_32_DPL0 = 0b1000 << 4 | GateType::TRAP_32,
+};
 
 /**
  * @brief The Interrupt Descriptor Table
@@ -34,7 +48,6 @@ class InterruptDescriptorTable {
     static_assert(offsetof(IDTEntry, ISR_base_high) == 8);
     static_assert(offsetof(IDTEntry, reserved) == 12);
 
-
     /**
      * @brief Structure to load into IDTR
      *
@@ -48,7 +61,7 @@ class InterruptDescriptorTable {
     static_assert(offsetof(IDTPointer, limit) == 0);
     static_assert(offsetof(IDTPointer, base) == 2);
 
-    alignas(0x10) IDTEntry table[256]{};
+    alignas(0x10) IDTEntry table[IDT_SIZE]{};
     IDTPointer pointer{};
 
   public:
@@ -57,9 +70,9 @@ class InterruptDescriptorTable {
      *
      * @param vector Which descriptor to set the value of
      * @param ISR The pointer to the ISR
-     * @param flags The value for the attributes byte in the descriptor
+     * @param attributes The value for the attributes byte in the descriptor
      */
-    void set_descriptor(std::uint8_t vector, void *ISR, std::uint8_t flags);
+    void set_descriptor(std::uint8_t vector, void *ISR, std::uint8_t attributes);
 
     /**
      * @brief Sets up the IDT and loads it into the IDTR
